@@ -39,35 +39,45 @@ var map = new ol.Map({
 
 var view = map.getView();
 
-// var geolocation = new ol.Geolocation({
-//   tracking: false
-// });
+var geolocation = new ol.Geolocation();
+geolocation.bindTo('projection', view);
 
-// geolocation.on('tracking_changed', function() {
-//   // FIXME: check errors
-//   if (this.getTracking()) {
-//     $('.ol-location').addClass('tracking');
-//   } else {
-//     $('.ol-location').removeClass('tracking');
-//   }
-// });
-// geolocation.on('position_changed', function() {
-//   map.addPreRenderFunction(ol.animation.pan({
-//     duration: 1000,
-//     source: view.getCenter()
-//   }));
-//   view.setCenter(geolocation.getPosition());
-//   // FIXME: zoom if needed
-//   view.once('center_changed', function() {
-//     geolocation.setTracking(false);
-//   });
-// });
+var marker = new ol.Overlay({
+  map: map,
+  element: $('<i/>').addClass('ol-location-marker icon-map-marker')
+});
+marker.bindTo('position', geolocation);
 
-// geolocation.bindTo('projection', view);
-// $('.ol-location').click(function() {
-//   geolocation.setTracking(!geolocation.getTracking());
-// });
 
-// // $(map.getTarget()).find('[data-ol-control]').each(function() {
-// //   var control = $(this).data('ol-control');
-// // });
+geolocation.on('error', function() {
+  $('.ol-location').removeClass('tracking').addClass('disabled');
+});
+
+geolocation.on('change:tracking', function() {
+  if (this.getTracking()) {
+    $('.ol-location').addClass('tracking');
+  } else {
+    $('.ol-location').removeClass('tracking');
+  }
+});
+
+geolocation.on('change:position', function() {
+  map.addPreRenderFunction(ol.animation.pan({
+    duration: 1000,
+    source: view.getCenter()
+  }));
+  view.setCenter(geolocation.getPosition());
+  // FIXME: zoom if needed
+
+  map.once('down', function() {
+    geolocation.setTracking(false);
+  });
+});
+
+$('.ol-location').click(function() {
+  geolocation.setTracking(!geolocation.getTracking());
+});
+
+// $(map.getTarget()).find('[data-ol-control]').each(function() {
+//   var control = $(this).data('ol-control');
+// });

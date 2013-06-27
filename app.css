@@ -2,12 +2,21 @@ html, body {
     height: 100%;
 }
 
+.navbar-fixed-top {
+    -webkit-box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.175);
+    box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.175);
+}
+
 .map {
     position: absolute;
     width: 100%;
     top: 50px;
     bottom: 0;
     background-image: url(wavegrid.png);
+}
+
+.ol-location-marker {
+    font-size: 36px;
 }
 
 .map .map-control {
@@ -30,6 +39,7 @@ html, body {
     background-color: #4cae4c;
     border-color: #449d44;
 }
+
 
 .ol-layers {
     right: 15px;
